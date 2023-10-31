@@ -19,13 +19,11 @@ using System.Windows.Shapes;
 
 namespace Abonents_Book
 {
-
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             CommandBindings.Add(new CommandBinding(DataCommands.Add, AddCommand, AddCommand_CanExecute));
-            //CommandBindings.Add(new CommandBinding(DataCommands.Modify, ModifyCommand, ModifyCommand_CanExecute));
             CommandBindings.Add(new CommandBinding(DataCommands.Delete, DeleteCommand, DeleteCommand_CanExecute));
             CommandBindings.Add(new CommandBinding(DataCommands.Save, SaveCommand, SaveCommand_CanExecute));
             CommandBindings.Add(new CommandBinding(DataCommands.Load, LoadCommand, LoadCommand_CanExecute));
