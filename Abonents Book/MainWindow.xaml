@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Abonents_Book"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="530" Width="800" MaxHeight="500" MinHeight="550" MinWidth="570">
     <Window.CommandBindings>
         <CommandBinding Command="local:DataCommands.Add" Executed="AddCommand" CanExecute="AddCommand_CanExecute" />
         <CommandBinding Command="local:DataCommands.Modify" Executed="ModifyCommand" CanExecute="ModifyCommand_CanExecute" />
@@ -86,27 +86,20 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-
     </Window.Resources>
 
     <ScrollViewer Background="#E1BEE7">
         <StackPanel DataContext="{StaticResource contactManager}">
-            <WrapPanel Orientation="Horizontal" Margin="10" VerticalAlignment="Center">
+            <!-- Верхняя часть (3 TextBox) -->
+            <WrapPanel Orientation="Horizontal" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <TextBox Style="{StaticResource TextBoxStyleWithPlaceholder}" Name="personName" Text="{Binding SelectedPerson.Name}" TextChanged="TextBox_TextChanged" Tag="Имя" MinWidth="150"/>
                 <TextBox Style="{StaticResource TextBoxStyleWithPlaceholder}" Name="personAddress" Text="{Binding SelectedPerson.Address}" TextChanged="TextBox_TextChanged" Tag="Адрес" MinWidth="150"/>
-                <TextBox Style="{StaticResource TextBoxStyleWithPlaceholder}" Name="personPhone" Text="{Binding SelectedPerson.Phone}" TextChanged="TextBox_TextChanged" Tag="Телефон" MinWidth="150" />
-
-                <Button Style="{StaticResource ButtonStyle}" Command="local:DataCommands.Add" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" />
-                <Button Style="{StaticResource ButtonStyle}" Command="local:DataCommands.Modify" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" />
-                <Button Style="{StaticResource ButtonStyle}" Command="local:DataCommands.Delete" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" />
-                <Button Style="{StaticResource ButtonStyle}" Command="local:DataCommands.Save" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" />
-                <Button Style="{StaticResource ButtonStyle}" Command="local:DataCommands.Load" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" />
-
+                <TextBox Style="{StaticResource TextBoxStyleWithPlaceholder}" Name="personPhone" Text="{Binding SelectedPerson.Phone}" TextChanged="TextBox_TextChanged" Tag="Телефон" MinWidth="150"/>
             </WrapPanel>
 
+            <!-- ListView (посередине) -->
             <ListBox ItemsSource="{Binding Persons}" SelectedItem="{Binding SelectedPerson, Mode=TwoWay}" Margin="10"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="300">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="#673AB7" BorderThickness="1" Margin="10">
@@ -124,6 +117,15 @@
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
             </ListBox>
+
+            <!-- Нижняя часть (Кнопки) -->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Button Style="{StaticResource ButtonStyle}" Command="local:DataCommands.Add" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" />
+                <Button Style="{StaticResource ButtonStyle}" Command="local:DataCommands.Modify" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" />
+                <Button Style="{StaticResource ButtonStyle}" Command="local:DataCommands.Delete" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" />
+                <Button Style="{StaticResource ButtonStyle}" Command="local:DataCommands.Save" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" />
+                <Button Style="{StaticResource ButtonStyle}" Command="local:DataCommands.Load" Content="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" />
+            </StackPanel>
         </StackPanel>
     </ScrollViewer>
 </Window>
