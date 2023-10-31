@@ -14,6 +14,9 @@ namespace Abonents_Book
         private string address;
         private string phone;
 
+        public event Action DataModified;
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public string Name
         {
             get => name;
@@ -52,12 +55,11 @@ namespace Abonents_Book
                 }
             }
         }
-        public event Action DataModified;
-        public event PropertyChangedEventHandler PropertyChanged;
+        
 
-        protected virtual void OnPropertyChanged(string propertyName)
+        protected virtual void OnPropertyChanged(string prop)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
             DataModified?.Invoke();
         }
     }
@@ -67,26 +69,26 @@ namespace Abonents_Book
         public bool IsDataChanged { get; set; } = false;
         public ContactManager()
         {
-            _persons.CollectionChanged += (s, e) =>
+            abonents.CollectionChanged += (s, e) =>
             {
                 IsDataChanged = true;
                 OnPropertyChanged(nameof(IsDataChanged));
             };
         }
 
-        private ObservableCollection<Abonent> _persons = new ObservableCollection<Abonent>();
-        private Abonent _selectedPerson = new Abonent();
+        private ObservableCollection<Abonent> abonents = new ObservableCollection<Abonent>();
+        private Abonent currentAbonent = new Abonent();
 
-        public ObservableCollection<Abonent> Persons => _persons;
+        public ObservableCollection<Abonent> Persons => abonents;
 
         public Abonent SelectedPerson
         {
-            get => _selectedPerson;
+            get => currentAbonent;
             set
             {
-                if (_selectedPerson != value)
+                if (currentAbonent != value)
                 {
-                    _selectedPerson = value;
+                    currentAbonent = value;
                     OnPropertyChanged(nameof(SelectedPerson));
                 }
             }
@@ -98,7 +100,7 @@ namespace Abonents_Book
                 IsDataChanged = true;
                 OnPropertyChanged(nameof(IsDataChanged));
             };
-            _persons.Add(person);
+            abonents.Add(person);
         }
         public event PropertyChangedEventHandler PropertyChanged;
 
