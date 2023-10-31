@@ -9,28 +9,15 @@ namespace Abonents_Book
 {
     public class DataCommands
     {
-        private static RoutedUICommand requery;
-        private static RoutedUICommand add;
-        private static RoutedUICommand modify;
-        private static RoutedUICommand delete;
-        private static RoutedUICommand save;
-        private static RoutedUICommand load;
+        public static RoutedUICommand Add { get; } = CreateCommand("Add", "Add", new KeyGesture(Key.A, ModifierKeys.Control));
+        public static RoutedUICommand Delete { get; } = CreateCommand("Delete", "Delete", new KeyGesture(Key.D, ModifierKeys.Control));
+        public static RoutedUICommand Save { get; } = CreateCommand("Save", "Save", new KeyGesture(Key.S, ModifierKeys.Control));
+        public static RoutedUICommand Load { get; } = CreateCommand("Load", "Load", new KeyGesture(Key.L, ModifierKeys.Control));
 
-        static DataCommands()
+        private static RoutedUICommand CreateCommand(string text, string name, KeyGesture keyGesture)
         {
-            requery = new RoutedUICommand("Requery", "Requery", typeof(DataCommands));
-            add = new RoutedUICommand("Add", "Add", typeof(DataCommands));
-            modify = new RoutedUICommand("Изменить", "Modify", typeof(DataCommands));
-            delete = new RoutedUICommand("Delete", "Delete", typeof(DataCommands));
-            save = new RoutedUICommand("Save", "Save", typeof(DataCommands));
-            load = new RoutedUICommand("Load", "Load", typeof(DataCommands));
+            RoutedUICommand command = new RoutedUICommand(text, name, typeof(DataCommands));
+            return command;
         }
-
-        public static RoutedUICommand Requery => requery;
-        public static RoutedUICommand Add => add;
-        public static RoutedUICommand Modify => modify;
-        public static RoutedUICommand Delete => delete;
-        public static RoutedUICommand Save => save;
-        public static RoutedUICommand Load => load;
     }
 }

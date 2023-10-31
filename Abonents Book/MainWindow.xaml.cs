@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,6 +22,8 @@ namespace Abonents_Book
 {
     public partial class MainWindow : Window
     {
+        private bool isChanged = false;
+        private Person _tempPerson;
         public MainWindow()
         {
             CommandBindings.Add(new CommandBinding(DataCommands.Add, AddCommand, AddCommand_CanExecute));
@@ -30,97 +33,11 @@ namespace Abonents_Book
 
             InitializeComponent();
         }
-        private void AddCommand(object sender, ExecutedRoutedEventArgs e)
-        {
-            AddButton_Click(sender, e);
-        }
-
-        private void AddCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            if (!string.IsNullOrWhiteSpace(personName.Text)
-                           && !string.IsNullOrWhiteSpace(personAddress.Text)
-                           && !string.IsNullOrWhiteSpace(personPhone.Text))
-            {
-                e.CanExecute = true;
-                return;
-            }
-            e.CanExecute = false;
-        }
-        private bool _isChanged = false;
-
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            _isChanged = true;
+            isChanged = true;
             CommandManager.InvalidateRequerySuggested();
         }
-
-        private void ModifyCommand(object sender, ExecutedRoutedEventArgs e)
-        {
-            ModifyButton_Click(sender, e);
-            _isChanged = false;
-        }
-
-        private void ModifyCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = _isChanged;
-        }
-        private void DeleteCommand(object sender, ExecutedRoutedEventArgs e)
-        {
-            DeleteButton_Click(sender, e);
-        }
-
-        private void DeleteCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            ContactManager contactManager = Resources["contactManager"] as ContactManager;
-            if (contactManager.Persons.Count > 0 && contactManager.SelectedPerson != null)
-            {
-                e.CanExecute = true;
-                return;
-            }
-            e.CanExecute = false;
-        }
-
-
-        private void SaveCommand(object sender, ExecutedRoutedEventArgs e)
-        {
-            SaveButton_Click(sender, e);
-        }
-
-        private void SaveCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            ContactManager contactManager = Resources["contactManager"] as ContactManager;
-            e.CanExecute = contactManager?.IsDataChanged ?? false;
-        }
-
-
-        private void LoadCommand(object sender, ExecutedRoutedEventArgs e)
-        {
-            LoadButton_Click(sender, e);
-        }
-
-        private void LoadCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
-        private void AddButton_Click(object sender, RoutedEventArgs e)
-        {
-            ContactManager contactManager = Resources["contactManager"] as ContactManager;
-
-            contactManager?.Persons.Add(new Person
-            {
-                Name = personName.Text,
-                Address = personAddress.Text,
-                Phone = personPhone.Text
-            });
-            personName.Text = "";
-            personAddress.Text = "";
-            personPhone.Text = "";
-        }
-        
-
-        private Person _tempPerson;
-
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ContactManager contactManager = Resources["contactManager"] as ContactManager;
@@ -130,53 +47,64 @@ namespace Abonents_Book
             personPhone.Text = contactManager.SelectedPerson.Phone;
         }
 
-        private void ModifyButton_Click(object sender, RoutedEventArgs e)
-        {
 
+        private void AddCommand(object sender, ExecutedRoutedEventArgs e) => AddButton_Click(sender, e);
+        private void AddCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = !string.IsNullOrWhiteSpace(personName.Text) && !string.IsNullOrWhiteSpace(personAddress.Text) && !string.IsNullOrWhiteSpace(personPhone.Text);
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
             ContactManager contactManager = Resources["contactManager"] as ContactManager;
 
-            Person selectedPerson = contactManager.SelectedPerson;
-            if (selectedPerson == null)
+            Person newPerson = new Person
             {
-                MessageBox.Show("Пожалуйста, выберите контакт для изменения.");
-                return;
-            }
+                Name = personName.Text,
+                Address = personAddress.Text,
+                Phone = personPhone.Text
+            };
 
-            selectedPerson.Name = personName.Text;
-            selectedPerson.Address = personAddress.Text;
-            selectedPerson.Phone = personPhone.Text;
+            contactManager.Persons.Add(newPerson);
 
-            personName.Text = "";
-            personAddress.Text = "";
-            personPhone.Text = "";
-
-            _tempPerson = null;
+            personName.Clear();
+            personAddress.Clear();
+            personPhone.Clear();
         }
 
 
+
+        private void DeleteCommand(object sender, ExecutedRoutedEventArgs e) => DeleteButton_Click(sender, e);
+        private void DeleteCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            ContactManager contactManager = Resources["contactManager"] as ContactManager;
+            e.CanExecute = contactManager.Persons.Count > 0 && contactManager.SelectedPerson != null;
+        }
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             ContactManager contactManager = Resources["contactManager"] as ContactManager;
 
-            if (contactManager?.SelectedPerson == null)
-            {
-                MessageBox.Show("Пожалуйста, выберите контакт для удаления.");
-                return;
-            }
-
-            MessageBoxResult result = MessageBox.Show("Вы уверены, что хотите удалить этот контакт?", "Подтверждение удаления", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
-            if (result == MessageBoxResult.Yes)
+            if (contactManager.SelectedPerson != null)
             {
                 contactManager.Persons.Remove(contactManager.SelectedPerson);
             }
         }
 
+
+        private void SaveCommand(object sender, ExecutedRoutedEventArgs e) => SaveButton_Click(sender, e);
+
+        private void SaveCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            ContactManager contactManager = Resources["contactManager"] as ContactManager;
+            e.CanExecute = contactManager != null && contactManager.IsDataChanged;
+        }
+
+        private void LoadCommand(object sender, ExecutedRoutedEventArgs e) => LoadButton_Click(sender, e);
+        private void LoadCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = true;
+
+
+
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             ContactManager contactManager = Resources["contactManager"] as ContactManager;
 
-            var json = JsonConvert.SerializeObject(contactManager.Persons);
+            String json = JsonConvert.SerializeObject(contactManager.Persons);
 
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
@@ -196,7 +124,7 @@ namespace Abonents_Book
             ContactManager contactManager = Resources["contactManager"] as ContactManager;
 
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "JSON файлы (*.json)|*.json|Все файлы (*.*)|*.*";
+            openFileDialog.Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == true)
             {
                 string jsonText = File.ReadAllText(openFileDialog.FileName);
@@ -215,12 +143,12 @@ namespace Abonents_Book
                     }
                     else
                     {
-                        MessageBox.Show("Ошибка при загрузке контактов.");
+                        MessageBox.Show("Something went wrong.");
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Произошла ошибка: {ex.Message}");
+                    MessageBox.Show(ex.ToString());
                 }
             }
 
