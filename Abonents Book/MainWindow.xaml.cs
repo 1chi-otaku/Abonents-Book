@@ -23,7 +23,7 @@ namespace Abonents_Book
     public partial class MainWindow : Window
     {
         private bool isChanged = false;
-        private Person _tempPerson;
+        private Abonent _tempPerson;
         public MainWindow()
         {
             CommandBindings.Add(new CommandBinding(DataCommands.Add, AddCommand, AddCommand_CanExecute));
@@ -47,14 +47,13 @@ namespace Abonents_Book
             personPhone.Text = contactManager.SelectedPerson.Phone;
         }
 
-
         private void AddCommand(object sender, ExecutedRoutedEventArgs e) => AddButton_Click(sender, e);
         private void AddCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e) => e.CanExecute = !string.IsNullOrWhiteSpace(personName.Text) && !string.IsNullOrWhiteSpace(personAddress.Text) && !string.IsNullOrWhiteSpace(personPhone.Text);
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
             ContactManager contactManager = Resources["contactManager"] as ContactManager;
 
-            Person newPerson = new Person
+            Abonent newPerson = new Abonent
             {
                 Name = personName.Text,
                 Address = personAddress.Text,
@@ -130,7 +129,7 @@ namespace Abonents_Book
                 string jsonText = File.ReadAllText(openFileDialog.FileName);
                 try
                 {
-                    ObservableCollection<Person> loadedPersons = JsonConvert.DeserializeObject<ObservableCollection<Person>>(jsonText);
+                    ObservableCollection<Abonent> loadedPersons = JsonConvert.DeserializeObject<ObservableCollection<Abonent>>(jsonText);
 
                     if (loadedPersons != null)
                     {

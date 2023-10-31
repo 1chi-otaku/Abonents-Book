@@ -8,20 +8,20 @@ using System.Threading.Tasks;
 
 namespace Abonents_Book
 {
-    public class Person : INotifyPropertyChanged
+    public class Abonent : INotifyPropertyChanged
     {
-        private string _name;
-        private string _address;
-        private string _phone;
+        private string name;
+        private string address;
+        private string phone;
 
         public string Name
         {
-            get => _name;
+            get => name;
             set
             {
-                if (_name != value)
+                if (name != value)
                 {
-                    _name = value;
+                    name = value;
                     OnPropertyChanged(nameof(Name));
                 }
             }
@@ -29,12 +29,12 @@ namespace Abonents_Book
 
         public string Address
         {
-            get => _address;
+            get => address;
             set
             {
-                if (_address != value)
+                if (address != value)
                 {
-                    _address = value;
+                    address = value;
                     OnPropertyChanged(nameof(Address));
                 }
             }
@@ -42,12 +42,12 @@ namespace Abonents_Book
 
         public string Phone
         {
-            get => _phone;
+            get => phone;
             set
             {
-                if (_phone != value)
+                if (phone != value)
                 {
-                    _phone = value;
+                    phone = value;
                     OnPropertyChanged(nameof(Phone));
                 }
             }
@@ -74,12 +74,12 @@ namespace Abonents_Book
             };
         }
 
-        private ObservableCollection<Person> _persons = new ObservableCollection<Person>();
-        private Person _selectedPerson = new Person();
+        private ObservableCollection<Abonent> _persons = new ObservableCollection<Abonent>();
+        private Abonent _selectedPerson = new Abonent();
 
-        public ObservableCollection<Person> Persons => _persons;
+        public ObservableCollection<Abonent> Persons => _persons;
 
-        public Person SelectedPerson
+        public Abonent SelectedPerson
         {
             get => _selectedPerson;
             set
@@ -91,7 +91,7 @@ namespace Abonents_Book
                 }
             }
         }
-        public void AddPerson(Person person)
+        public void AddPerson(Abonent person)
         {
             person.DataModified += () =>
             {
