@@ -19,15 +19,13 @@ using System.Windows.Shapes;
 
 namespace Abonents_Book
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             CommandBindings.Add(new CommandBinding(DataCommands.Add, AddCommand, AddCommand_CanExecute));
-            CommandBindings.Add(new CommandBinding(DataCommands.Modify, ModifyCommand, ModifyCommand_CanExecute));
+            //CommandBindings.Add(new CommandBinding(DataCommands.Modify, ModifyCommand, ModifyCommand_CanExecute));
             CommandBindings.Add(new CommandBinding(DataCommands.Delete, DeleteCommand, DeleteCommand_CanExecute));
             CommandBindings.Add(new CommandBinding(DataCommands.Save, SaveCommand, SaveCommand_CanExecute));
             CommandBindings.Add(new CommandBinding(DataCommands.Load, LoadCommand, LoadCommand_CanExecute));
@@ -121,7 +119,7 @@ namespace Abonents_Book
             personAddress.Text = "";
             personPhone.Text = "";
         }
-        #region  Я разорвала здесь связь, так как эта привязка противоречит моей логике. Мне не нравилось, когда изменения происходили автоматически. Я хотела, чтобы изменения применились только после нажатия на кнопку "Изменить".
+        
 
         private Person _tempPerson;
 
@@ -129,22 +127,9 @@ namespace Abonents_Book
         {
             ContactManager contactManager = Resources["contactManager"] as ContactManager;
 
-            Person selectedPerson = contactManager.SelectedPerson;
-            if (selectedPerson == null)
-            {
-                return;
-            }
-
-            _tempPerson = new Person
-            {
-                Name = selectedPerson.Name,
-                Address = selectedPerson.Address,
-                Phone = selectedPerson.Phone
-            };
-
-            personName.Text = _tempPerson.Name;
-            personAddress.Text = _tempPerson.Address;
-            personPhone.Text = _tempPerson.Phone;
+            personName.Text = contactManager.SelectedPerson.Name;
+            personAddress.Text = contactManager.SelectedPerson.Address;
+            personPhone.Text = contactManager.SelectedPerson.Phone;
         }
 
         private void ModifyButton_Click(object sender, RoutedEventArgs e)
@@ -170,7 +155,6 @@ namespace Abonents_Book
             _tempPerson = null;
         }
 
-        #endregion
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {

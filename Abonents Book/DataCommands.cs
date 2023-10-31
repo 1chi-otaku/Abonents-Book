@@ -19,11 +19,11 @@ namespace Abonents_Book
         static DataCommands()
         {
             requery = new RoutedUICommand("Requery", "Requery", typeof(DataCommands));
-            add = new RoutedUICommand("Добавить", "Add", typeof(DataCommands));
+            add = new RoutedUICommand("Add", "Add", typeof(DataCommands));
             modify = new RoutedUICommand("Изменить", "Modify", typeof(DataCommands));
-            delete = new RoutedUICommand("Удалить", "Delete", typeof(DataCommands));
-            save = new RoutedUICommand("Сохранить", "Save", typeof(DataCommands));
-            load = new RoutedUICommand("Загрузить", "Load", typeof(DataCommands));
+            delete = new RoutedUICommand("Delete", "Delete", typeof(DataCommands));
+            save = new RoutedUICommand("Save", "Save", typeof(DataCommands));
+            load = new RoutedUICommand("Load", "Load", typeof(DataCommands));
         }
 
         public static RoutedUICommand Requery => requery;
